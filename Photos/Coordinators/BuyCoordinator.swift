@@ -44,11 +44,12 @@ class BuyCoordinator: Coordinator {
     // MARK: - API
     
     override func start() {
-        guard UserDefaults.isSignedIn else {
-            return self.showSignIn()
+        if UserDefaults.isSignedIn {
+            self.buyPhoto(photo)
+        } else {
+            self.showSignIn()
         }
-        self.buyPhoto(photo)
-        
+
         self.presentingViewController?.present(navigationController, animated: true)
     }
     
@@ -67,6 +68,7 @@ class BuyCoordinator: Coordinator {
     // MARK: - UINavigation delegate
     
     override func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        print("navigationController didShow: \(viewController)")
         if viewController === initialViewController {
             didFinish?(self)
         }
