@@ -67,7 +67,6 @@ class BuyCoordinator: Coordinator {
     // MARK: - UINavigation delegate
     
     override func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        print("navigationController didShow: \(viewController)")
         if viewController === initialViewController {
             didFinish?(self)
         }

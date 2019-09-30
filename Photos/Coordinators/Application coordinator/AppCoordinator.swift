@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Foundation
 
 private extension AppCoordinator {
     enum PurchaseFlowType {
