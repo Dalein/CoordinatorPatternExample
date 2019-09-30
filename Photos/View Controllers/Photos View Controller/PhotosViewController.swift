@@ -23,10 +23,8 @@ class PhotosViewController: UIViewController, Storyboardable {
     // MARK: -
 
     var didSignIn: (() -> Void)?
-
-    // MARK: -
-    
     var didSelectPhoto: ((Photo) -> Void)?
+    var didBuyPhoto: ((Photo) -> Void)?
     
     // MARK: -
     
@@ -73,6 +71,11 @@ class PhotosViewController: UIViewController, Storyboardable {
         } else {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sign In", style: .plain, target: self, action: #selector(signIn(_:)))
         }
+        
+        if let indexPaths = tableView.indexPathsForVisibleRows {
+            // Update Table View
+            tableView.reloadRows(at: indexPaths, with: .none)
+        }
     }
 
     // MARK: - Actions
@@ -108,7 +111,10 @@ extension PhotosViewController: UITableViewDataSource {
         let photo = dataSource[indexPath.row]
         
         // Configure Cell
-        cell.configure(title: photo.title, url: photo.url)
+        cell.configure(title: photo.title, url: photo.url, didBuyPhoto: UserDefaults.didBuy(photo))
+        cell.didBuy = { [weak self] in
+            self?.didBuyPhoto?(photo)
+        }
         
         return cell
     }

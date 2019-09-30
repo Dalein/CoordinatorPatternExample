@@ -155,7 +155,6 @@
 			isa = PBXGroup;
 			children = (
 				CC8C884222B3F2F10033AB37 /* Storyboardable.swift */,
-				FC811386233298BC00404413 /* Coordinator.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -163,7 +162,8 @@
 		CC8C884422B3F3240033AB37 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
-				CC8C884522B3F33C0033AB37 /* AppCoordinator.swift */,
+				FC811386233298BC00404413 /* Coordinator.swift */,
+				D78DE42023420410002837E2 /* Application coordinator */,
 				FC811384233287DD00404413 /* BuyCoordinator.swift */,
 			);
 			path = Coordinators;
@@ -207,6 +207,14 @@
 				CCE17FB222B4BC9900C2DBDA /* BuyViewController.swift */,
 			);
 			path = "Buy View Controller";
+			sourceTree = "<group>";
+		};
+		D78DE42023420410002837E2 /* Application coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				CC8C884522B3F33C0033AB37 /* AppCoordinator.swift */,
+			);
+			path = "Application coordinator";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

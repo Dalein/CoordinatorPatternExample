@@ -10,44 +10,69 @@ import UIKit
 
 
 class BuyCoordinator: Coordinator {
-    private let navigationController: UINavigationController
     private let photo: Photo
-    
-    var didFinish: ((Coordinator) -> Void)?
-    private let initialViewController: UIViewController?
+    private let navigationController: UINavigationController
+   
+    private var initialViewController: UIViewController?
+    private var presentingViewController: UIViewController?
     
     
     // MARK: - Init
     
+    /// Init as horizontal flow
     init(navigationController: UINavigationController, photo: Photo) {
         self.navigationController = navigationController
         self.photo = photo
         
         self.initialViewController = navigationController.viewControllers.last
+        super.init()
+    }
+    
+    /// Init as vertical flow
+    init(presentingViewController: UIViewController, photo: Photo) {
+        self.presentingViewController = presentingViewController
+        self.photo = photo
+        
+        // Initialize Navigation Controller
+        self.navigationController = UINavigationController()
+        
+        super.init()
+        navigationController.delegate = self
     }
     
     
     // MARK: - API
     
-    func start() {
+    override func start() {
         guard UserDefaults.isSignedIn else {
             return self.showSignIn()
         }
         self.buyPhoto(photo)
+        
+        self.presentingViewController?.present(navigationController, animated: true)
     }
     
-    
-   
     
     private func finish() {
         // Reset Navigation Controller
         if let viewController = initialViewController {
             navigationController.popToViewController(viewController, animated: true)
         } else {
-            navigationController.popToRootViewController(animated: true)
+            presentingViewController?.dismiss(animated: true)
             didFinish?(self)
         }
     }
+    
+    
+    // MARK: - UINavigation delegate
+    
+    override func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        print("navigationController didShow: \(viewController)")
+        if viewController === initialViewController {
+            didFinish?(self)
+        }
+    }
+    
     
     // MARK: - Deinitialization
     deinit {
@@ -90,17 +115,4 @@ extension BuyCoordinator {
            
            navigationController.pushViewController(buyViewController, animated: true)
        }
-}
-
-
-// MARK: UINavigationControllerDelegate methods
-extension BuyCoordinator {
-    
-    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        print("navigationController didShow: \(viewController)")
-        if viewController === initialViewController {
-            didFinish?(self)
-        }
-    }
-    
 }
