@@ -17,7 +17,6 @@ private extension AppCoordinator {
 
 class AppCoordinator: Coordinator {
     private let navigationController = UINavigationController()
-    private var childCoordinators = [Coordinator]()
     
     
     // MARK: - Public API
@@ -34,20 +33,6 @@ class AppCoordinator: Coordinator {
         showPhotos()
     }
     
-    
-    // MARK: - UINavigationControllerDelegate
-    
-    override func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        childCoordinators.forEach { childCoordinator in
-            childCoordinator.navigationController(navigationController, willShow: viewController, animated: animated)
-        }
-    }
-    
-    override func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        childCoordinators.forEach { childCoordinator in
-            childCoordinator.navigationController(navigationController, didShow: viewController, animated: animated)
-        }
-    }
 }
 
 
@@ -112,26 +97,5 @@ extension AppCoordinator {
         }
         
         pushCoordinator(buyCoordinator)
-    }
-}
-
-
-// MARK: - Helper Methods
-extension AppCoordinator {
-    
-    private func pushCoordinator(_ coordinator: Coordinator) {
-        coordinator.didFinish = { [weak self] coordinator in
-            self?.popCoordinator(coordinator)
-        }
-        
-        coordinator.start()
-        childCoordinators.append(coordinator)
-    }
-    
-    private func popCoordinator(_ coordinator: Coordinator) {
-        // Remove Coordinator From Child Coordinators
-        if let index = childCoordinators.firstIndex(where: { $0 === coordinator }) {
-            childCoordinators.remove(at: index)
-        }
     }
 }
