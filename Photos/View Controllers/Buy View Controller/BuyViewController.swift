@@ -9,36 +9,24 @@
 import UIKit
 
 class BuyViewController: UIViewController, Storyboardable {
-
-    // MARK: - Properties
+    
+    var photo: Photo?
     
     @IBOutlet weak var buyButton: UIButton!
-    
-    // MARK: -
-    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
-
-    // MARK: -
-    
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView! {
         didSet {
-            // Configure Activity Indicator View
             activityIndicatorView.hidesWhenStopped = true
         }
     }
     
-    // MARK: -
     
-    var photo: Photo?
-    
-    // MARK: -
-    
+    // MARK: - Handlers
     var didCancel: (() -> Void)?
-    
-    // MARK: -
-    
     var didBuyPhoto: ((Photo) -> Void)?
+    var didShowTerms: (() -> Void)?
+    
 
     // MARK: - View Life Cycle
 
@@ -124,6 +112,10 @@ class BuyViewController: UIViewController, Storyboardable {
 
     @objc func cancel(_ sender: UIBarButtonItem) {
         didCancel?()
+    }
+    
+    @IBAction func showTerms(_ sender: Any) {
+        didShowTerms?()
     }
 
 }

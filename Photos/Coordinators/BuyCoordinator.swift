@@ -12,8 +12,15 @@ import UIKit
 class BuyCoordinator: Coordinator {
     private let photo: Photo
     private let navigationController: UINavigationController
-   
+    
+    /// Only required to manage the horizontal purchase flow.
     private var initialViewController: UIViewController?
+    
+    /**
+     VC that will present coordinator's navigation controller (for vertical flow).
+     We don't pass a navigation controller to the initializer.
+     The coordinator is responsible for the creation and configuration of its navigation controller.
+     */
     private var presentingViewController: UIViewController?
     
     
@@ -49,8 +56,9 @@ class BuyCoordinator: Coordinator {
         } else {
             self.showSignIn()
         }
-
-        self.presentingViewController?.present(navigationController, animated: true)
+        
+        self.presentingViewController?
+            .present(navigationController, animated: true) // execute only if it's not nil (if it's vertical flow)
     }
     
     
@@ -86,34 +94,43 @@ class BuyCoordinator: Coordinator {
 extension BuyCoordinator {
     
     private func showSignIn() {
-           let signInViewController = SignInViewController.instantiate()
-           let photo = self.photo
-           
-           signInViewController.didSignIn = { [weak self] (token) in
-               UserDefaults.token = token
-               self?.buyPhoto(photo)
-           }
-           
-           signInViewController.didCancel = { [weak self] in
-               self?.finish()
-           }
-           
-          navigationController.pushViewController(signInViewController, animated: true)
-       }
-       
-       private func buyPhoto(_ photo: Photo) {
-           let buyViewController = BuyViewController.instantiate()
-           buyViewController.photo = photo
-           
-           buyViewController.didCancel = { [weak self] in
-               self?.finish()
-           }
-           
-           buyViewController.didBuyPhoto = { [weak self] _ in
-               UserDefaults.buy(photo: photo)
-               self?.finish()
-           }
-           
-           navigationController.pushViewController(buyViewController, animated: true)
-       }
+        let signInViewController = SignInViewController.instantiate()
+        let photo = self.photo
+        
+        signInViewController.didSignIn = { [weak self] (token) in
+            UserDefaults.token = token
+            self?.buyPhoto(photo)
+        }
+        
+        signInViewController.didCancel = { [weak self] in
+            self?.finish()
+        }
+        
+        navigationController.pushViewController(signInViewController, animated: true)
+    }
+    
+    private func buyPhoto(_ photo: Photo) {
+        let buyViewController = BuyViewController.instantiate()
+        buyViewController.photo = photo
+        
+        buyViewController.didCancel = { [weak self] in
+            self?.finish()
+        }
+        
+        buyViewController.didBuyPhoto = { [weak self] _ in
+            UserDefaults.buy(photo: photo)
+            self?.finish()
+        }
+        
+        buyViewController.didShowTerms = { [weak self] in
+            self?.showTerms()
+        }
+        
+        navigationController.pushViewController(buyViewController, animated: true)
+    }
+    
+    private func showTerms() {
+        let termsCoordinator = TermsCoordinator(presentingViewController: navigationController)
+        pushCoordinator(termsCoordinator)
+    }
 }

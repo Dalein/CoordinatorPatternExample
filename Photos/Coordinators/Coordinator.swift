@@ -9,6 +9,8 @@
 import UIKit
 
 class Coordinator: NSObject, UINavigationControllerDelegate {
+    var childCoordinators = [Coordinator]()
+    
     var didFinish: ((Coordinator) -> ())?
     
     func start() {}
@@ -17,4 +19,25 @@ class Coordinator: NSObject, UINavigationControllerDelegate {
     // MARK: - Default implementation for this methods. If child coordinators don't need them - they don't have to impl them.
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {}
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {}
+}
+
+
+// MARK: - Helper Methods
+extension Coordinator {
+    
+    func pushCoordinator(_ coordinator: Coordinator) {
+        coordinator.didFinish = { [weak self] coordinator in
+            self?.popCoordinator(coordinator)
+        }
+        
+        coordinator.start()
+        childCoordinators.append(coordinator)
+    }
+    
+    func popCoordinator(_ coordinator: Coordinator) {
+        // Remove Coordinator From Child Coordinators
+        if let index = childCoordinators.firstIndex(where: { $0 === coordinator }) {
+            childCoordinators.remove(at: index)
+        }
+    }
 }
