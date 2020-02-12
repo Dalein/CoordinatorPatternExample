@@ -36,6 +36,9 @@ class BuyCoordinator: Coordinator {
     }
     
     /// Init as vertical flow
+    /// - Parameters:
+    ///   - presentingViewController: VC that presents the coordinator's navigation controller.
+    ///   - photo: Photo for buying
     init(presentingViewController: UIViewController, photo: Photo) {
         self.presentingViewController = presentingViewController
         self.photo = photo
@@ -57,8 +60,8 @@ class BuyCoordinator: Coordinator {
             self.showSignIn()
         }
         
-        self.presentingViewController?
-            .present(navigationController, animated: true) // execute only if it's not nil (if it's vertical flow)
+        // it'll execute only if it's not nil (if it's vertical flow)
+        self.presentingViewController?.present(navigationController, animated: true)
     }
     
     
@@ -66,20 +69,13 @@ class BuyCoordinator: Coordinator {
         // Reset Navigation Controller
         if let viewController = initialViewController {
             navigationController.popToViewController(viewController, animated: true)
+            // didFinish is automatically invoked in  UINavigation delegate method
         } else {
             presentingViewController?.dismiss(animated: true)
             didFinish?(self)
         }
-    }
-    
-    
-    // MARK: - UINavigation delegate
-    
-    override func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        print("navigationController didShow: \(viewController)")
-        if viewController === initialViewController {
-            didFinish?(self)
-        }
+        
+       
     }
     
     
@@ -90,7 +86,8 @@ class BuyCoordinator: Coordinator {
     
 }
 
-// MARK: VCs flow
+
+// MARK: - VCs flow
 extension BuyCoordinator {
     
     private func showSignIn() {
@@ -133,4 +130,17 @@ extension BuyCoordinator {
         let termsCoordinator = TermsCoordinator(presentingViewController: navigationController)
         pushCoordinator(termsCoordinator)
     }
+}
+
+
+// MARK: - UINavigation delegate
+extension BuyCoordinator {
+    
+    override func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        print("navigationController didShow: \(viewController)")
+        if viewController === initialViewController {
+            didFinish?(self)
+        }
+    }
+    
 }

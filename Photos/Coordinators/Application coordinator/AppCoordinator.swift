@@ -36,7 +36,7 @@ class AppCoordinator: Coordinator {
 }
 
 
-// Mark Flow methods
+// MARK: - Flow methods
 extension AppCoordinator {
     
     private func showPhotos() {
@@ -54,7 +54,6 @@ extension AppCoordinator {
             self?.buyPhoto(photo, purchaseFlowType: .vertical)
         }
 
-        
         navigationController.pushViewController(photosViewController, animated: true)
     }
     
@@ -98,4 +97,5 @@ extension AppCoordinator {
         
         pushCoordinator(buyCoordinator)
     }
+    
 }

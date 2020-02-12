@@ -8,17 +8,13 @@
 
 import UIKit
 
-class Coordinator: NSObject, UINavigationControllerDelegate {
+class Coordinator: NSObject {
     var childCoordinators = [Coordinator]()
     
+    /// Notify parent coordinator that this subflow has finished
     var didFinish: ((Coordinator) -> ())?
     
     func start() {}
-    
-    // MARK: - For notifying child  coordinators
-    // MARK: - Default implementation for this methods. If child coordinators don't need them - they don't have to impl them.
-    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {}
-    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {}
 }
 
 
@@ -40,4 +36,15 @@ extension Coordinator {
             childCoordinators.remove(at: index)
         }
     }
+}
+
+extension Coordinator: UINavigationControllerDelegate {
+    
+    // MARK: - For notifying child  coordinators
+    // MARK: Default implementation for this methods. If child coordinators don't need them - they don't have to impl them.
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {}
+    
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {}
+    
 }
