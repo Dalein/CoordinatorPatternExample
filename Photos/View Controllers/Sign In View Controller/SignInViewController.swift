@@ -9,9 +9,7 @@
 import UIKit
 
 class SignInViewController: UIViewController, Storyboardable {
-
-    // MARK: - Properties
-
+    
     @IBOutlet var usernameTextField: UITextField! {
         didSet {
             // Configure Username Text Field
@@ -34,27 +32,18 @@ class SignInViewController: UIViewController, Storyboardable {
         }
     }
     
-    // MARK: -
-    
     @IBOutlet var signInButton: UIButton!
     @IBOutlet var cancelButton: UIButton!
     
-    // MARK: -
-    
     @IBOutlet var activityIndicatorView: UIActivityIndicatorView! {
         didSet {
-            // Configure Activity Indicator View
             activityIndicatorView.hidesWhenStopped = true
         }
     }
     
-    // MARK: -
-    
     var didSignIn: ((String) -> Void)?
-    
-    // MARK: -
-    
     var didCancel: (() -> Void)?
+    
     
     // MARK: - Actions
     
@@ -69,7 +58,6 @@ class SignInViewController: UIViewController, Storyboardable {
             
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
-                
                 self.cancelButton.isEnabled = true
                 
                 // Invoke Handler
@@ -77,7 +65,7 @@ class SignInViewController: UIViewController, Storyboardable {
             }
         }
     }
-
+    
     @IBAction func cancel(_ sender: Any) {
         didCancel?()
     }

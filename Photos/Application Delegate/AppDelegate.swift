@@ -16,16 +16,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Application Life Cycle
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        configWindow()
-        appCoordinator.start()
         
+        setupEntryPoint()
         return true
     }
     
-    private func configWindow() {
+    private func setupEntryPoint() {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = appCoordinator.rootViewController
         window?.makeKeyAndVisible()
+        appCoordinator.start()
     }
     
 }
